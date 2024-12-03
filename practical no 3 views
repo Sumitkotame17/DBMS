@@ -1,0 +1,47 @@
+CREATE DATABASE college;
+
+CREATE TABLE college.student
+(
+    rollno int NOT NULL,
+    name varchar(10) NOT NULL,
+    address varchar(20) NOT NULL,
+    marks int NOT NULL,
+    primary key(rollno)
+    );
+
+INSERT INTO college.student (rollno, name, address,marks) VALUES ('1', 'Abhishek','kopargaon','40'), ('2', 'Akshay', 'shirdi','50'),('3', 'Abhi','kopargaon','70'), ('4', 'Akash', 'rahuri','30'),('5', 'Aman','Aurangabad','80'), ('6', 'Dany', 'Sangamner','75');
+
+select * from college.student;
+
+create view college.student_view as select * from college.student;
+
+select * from college.student_view;
+
+create view college.student_view2 as select rollno, name from college.student;
+
+select * from college.student_view2;
+
+alter view college.student_view2 as select name, rollno from college.student;
+
+select * from college.student_view2;
+
+drop view college.student_view2;
+
+update college.student_view set name='rajanikant' where rollno=1;
+
+select * from college.student;
+
+CREATE TABLE college.student_contact
+(
+    rollno int NOT NULL,
+    contact varchar(10) NOT NULL,
+    primary key(rollno)
+    );
+
+INSERT INTO college.student_contact (rollno, contact) VALUES ('1', '111111111'), ('2', '222222222');
+
+select * from college.student_contact;
+
+create view college.student_view3 as select s.rollno,c.contact from college.student s,college.student_contact c where s.name=c.contact;
+
+select * from college.student_view3;
