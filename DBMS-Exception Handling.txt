@@ -1,0 +1,80 @@
+
+code 1st::::::::
+Section 1:
+
+CREATE TABLE customers (
+  c_id   NUMBER PRIMARY KEY,
+  c_name VARCHAR2(100),
+  c_addr VARCHAR2(255)
+);
+
+
+Section 2:
+
+INSERT INTO customers (c_id, c_name, c_addr) VALUES (1, 'Gayatri Nikam', '123 Maple St, Ahmednagar');
+INSERT INTO customers (c_id, c_name, c_addr) VALUES (2, 'Avinash Sharma', '456 Oak St, Mumbai');
+INSERT INTO customers (c_id, c_name, c_addr) VALUES (3, 'Mrunal Thakur', '789 Pine St, Delhi');
+INSERT INTO customers (c_id, c_name, c_addr) VALUES (7, 'Shrihan Wable', '101 Elm St, Pune');
+
+
+
+Section 3:
+
+DECLARE  
+   id customers.c_id%TYPE := 7;  
+   name customers.c_name%TYPE;  
+   addr customers.c_addr%TYPE;  
+BEGIN  
+   SELECT c_name, c_addr INTO name, addr  
+   FROM customers  
+   WHERE customers.c_id = id;  
+
+   DBMS_OUTPUT.PUT_LINE('Name: ' || name);  
+   DBMS_OUTPUT.PUT_LINE('Address: ' || addr);  
+EXCEPTION  
+   WHEN no_data_found THEN  
+      DBMS_OUTPUT.PUT_LINE('No such customer!');  
+   WHEN others THEN  
+      DBMS_OUTPUT.PUT_LINE('Display!');  
+END;
+
+
+
+code 2::::::::Divide by zero:
+DECLARE
+a int;
+b int;
+c int;
+BEGIN
+a := 11;
+b := 0;
+c := a/b;
+dbms_output.put_line('RESULT=' || c);
+EXCEPTION
+when ZERO_DIVIDE then
+dbms_output.put_line('Division by 0 is not possible');
+
+END;
+
+
+
+
+
+code 3::::::::::Invalid_total
+
+DECLARE
+    total_courses NUMBER := 4;  
+    invalid_total EXCEPTION;
+BEGIN
+    IF total_courses > 3 THEN
+        RAISE invalid_total;
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('Total courses are valid.');
+
+EXCEPTION
+    WHEN invalid_total THEN
+        DBMS_OUTPUT.PUT_LINE('Total number of courses cannot be more than 3.');
+END;
+
+
