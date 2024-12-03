@@ -1,0 +1,39 @@
+create database expt4;
+
+create table customers
+(
+id int primary key, 
+name varchar(22) not null, 
+ age int not null,
+ address varchar(22) not null, 
+ salary varchar(22) not null
+ );
+ 
+insert into customers values (1,'AMAR',33,'pune',4000);
+insert into customers values (2,'RAMAN',44,'kopargaon',5000);
+insert into customers values (3,'SANJAY',55,'nashik',6000);
+
+select * from customers;
+
+DELIMITER $$
+
+CREATE PROCEDURE UpdateCustomersSalary()
+BEGIN
+    DECLARE total_rows INT;
+    
+    UPDATE customers
+    SET salary = salary + 5000;
+    
+    SET total_rows = ROW_COUNT();
+    
+    IF total_rows = 0 THEN
+        SELECT 'No customers updated' AS message;
+    ELSE
+        SELECT CONCAT(total_rows, ' customers updated') AS message;
+    END IF;
+END$$
+
+DELIMITER ;
+
+CALL UpdateCustomersSalary();
+SELECT * FROM customers;
