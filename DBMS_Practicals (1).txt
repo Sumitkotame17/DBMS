@@ -1,0 +1,315 @@
+Practical 1:
+For a given set of relation schemes, create tables and perform the following Simple
+Queries, Simple Queries with Aggregate functions, Queries with Aggregate functions (group
+by and having clause).
+---------  1.Create 2.Alter 3.Drop 4.Insert 5.Update 6.Delete
+---------  Aggregate 1.Ave() 2.Count() 3.First() 4.Max() 5.Min() 6.Last()
+Syntax:1. Create a table 
+CREATE TABLE table_name (column_name datatype constrant, colo.....)
+Example: 
+Create table TY (Rl int not null primary key, sname varchar(25) not null);
+
+Syntax:2. Alter a Table
+Alter Table table_name rename column old_name TO new_name
+Example:
+ALTER TABLE TY rename column Rl to Roll_No;
+
+Syntax:3.Drop
+ALTER TABLE table_name DROP COLUMN column_name;
+Example:
+ALTER TABLE TY Drop column Roll_No;
+
+Syntax:4.Insert data into table
+INSERT INTO TY values("Ram");    ---- single values
+INSERT INTO TY VALUES ("JOY", "ROY", "JOYBOY");  ------ Multiple values
+
+Syntax: 5 Update the table
+UPDATE table_name SET column1 = value1, column2 = value2, ...
+WHERE condition;
+Example:
+UPDATE TY SET sname = "JOY2"
+WHERE Roll_No = 5;
+
+Syntax: 6 Delete a table data
+DELETE FROM table_name WHERE condition;
+DELETE FROM TY WHERE Roll_No = 14;
+
+########################################################################
+Practical 3: 
+Implement joins, aggregate functions and Views for DB.
+
+table1:::
+emp_id	emp_name	dept_id
+101	John Doe	1
+102	Jane Smith	2
+103	Alice Brown	NULL
+
+table2:::
+dept_id	dept_name
+1	Sales
+2	HR
+3	IT
+
+Inner JOIN: 
+SELECT table1.emp_id, table1.emp_name, table2.dept_name
+FROM table1
+INNER JOIN table2
+ON table1.dept_id = table2.dept_id;
+
+LEFT JOIN:
+SELECT table1.emp_id, table1.emp_name, table2.dept_name
+FROM table1
+LEFT JOIN table2
+ON table1.dept_id = table2.dept_id;
+
+RIGHT JOIN:
+SELECT table1.emp_id, table1.emp_name, table2.dept_name
+FROM table1
+RIGHT JOIN table2
+ON table1.dept_id = table2.dept_id;
+
+FULL JOIN:
+SELECT table1.emp_id, table1.emp_name, table2.dept_name
+FROM table1
+FULL JOIN table2
+ON table1.dept_id = table2.dept_id;
+
+-------- Views
+Syntax: 
+CREATE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+Example:
+CREATE VIEW table_1&2 AS
+SELECT table1.emp_id, table1.emp_name, table2.dept_name
+FROM table1
+LEFT JOIN table2
+ON table1.dept_id = table2.dept_id;
+## SELECT * FROM table_1&2;
+
+########################################################################
+Practical 4:
+Write a code for the implementation of Indexes and Stored Procedures.
+
+Syntax: for index creating
+CREATE INDEX index_name ON table_name (column_name);
+Example:
+CREATE INDEX idx_table1 ON table1 (column1);
+
+Syntax: for Stored Procedure
+CREATE PROCEDURE procedure_name (parameters)
+BEGIN
+    SQL statements;
+END;
+Example:
+DELIMITER //
+
+CREATE PROCEDURE AddTwoNumbers (IN num1 INT, IN num2 INT, OUT result INT)
+BEGIN
+    SET result = num1 + num2;
+END //
+
+DELIMITER ;
+################ call
+CALL AddTwoNumbers(10, 20, @output);
+SELECT @output AS SumResult;
+
+########################################################################
+Practical 5:
+Write a code to implement User defined Functions on DB.
+
+Syntax: To create a function 
+CREATE FUNCTION function_name (parameter_name datatype, ...)
+RETURNS return_datatype
+[DETERMINISTIC | NOT DETERMINISTIC]
+BEGIN
+    -- Function logic here
+    RETURN value;
+END;
+Example: 
+DELIMITER //
+
+CREATE FUNCTION SquareNumber (num INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    RETURN num * num;
+END //
+
+DELIMITER ;
+################ 
+SELECT SquareNumber(4) AS SquareResult;
+########################################################################
+Practical 6:
+Write a code to implement Triggers on DB.
+
+---- This trigger will automatically log the time when the student record is updated, updating a 
+last_updated column in the students table. (Assuming the table has a last_updated column.)
+----- ALTER TABLE students ADD COLUMN last_updated TIMESTAMP;
+
+Syntax: To Create a Trigger
+CREATE TRIGGER trigger_name
+{ BEFORE | AFTER } { INSERT | UPDATE | DELETE }
+ON table_name
+FOR EACH ROW
+BEGIN
+    -- Trigger Logic
+END;
+Example:
+DELIMITER //
+
+CREATE TRIGGER DefaultName
+BEFORE INSERT
+ON students
+FOR EACH ROW
+BEGIN
+    IF NEW.name IS NULL THEN
+        SET NEW.name = 'Unknown Student';
+    END IF;
+END //
+
+DELIMITER ;
+
+########################################################################
+Practical 7: $$$$$$$$$$$$$  PL/SQL Query
+For the given table write a cursor (Implicit, Explicit, Cursor using Looping statements, Parameterized Cursor)
+-- table name " Student"
+
+-- Implicit Cursor Example
+INSERT INTO students (roll_no, name) 
+VALUES (1, 'John Doe');
+#######################################
+DECLARE
+    -- Declare the cursor
+    CURSOR student_cursor IS
+        SELECT roll_no, name FROM students;
+    
+    -- Declare variables to hold data fetched from the cursor
+    v_roll_no INT;
+    v_name VARCHAR(100);
+BEGIN
+    -- Open the cursor
+    OPEN student_cursor;
+    
+    -- Loop through all rows fetched by the cursor
+    LOOP
+        -- Fetch data from the cursor into variables
+        FETCH student_cursor INTO v_roll_no, v_name;
+        
+        -- Exit the loop when no more rows are found
+        EXIT WHEN student_cursor%NOTFOUND;
+        
+        -- Process the fetched row (example: printing the data)
+        DBMS_OUTPUT.PUT_LINE('Roll No: ' || v_roll_no || ' Name: ' || v_name);
+    END LOOP;
+    
+    -- Close the cursor
+    CLOSE student_cursor;
+END;
+############################## Implicit cursor with looping
+DECLARE
+    CURSOR student_cursor IS
+        SELECT roll_no, name FROM students;
+BEGIN
+    FOR student_record IN student_cursor LOOP
+        -- Process each record (example: printing the data)
+        DBMS_OUTPUT.PUT_LINE('Roll No: ' || student_record.roll_no || ' Name: ' || student_record.name);
+    END LOOP;
+END;
+#####################################
+DECLARE
+    -- Declare a parameterized cursor
+    CURSOR student_cursor(p_roll_no INT) IS
+        SELECT roll_no, name FROM students WHERE roll_no = p_roll_no;
+    
+    -- Declare variables to hold the data
+    v_roll_no INT;
+    v_name VARCHAR(100);
+BEGIN
+    -- Open the cursor with a parameter
+    OPEN student_cursor(1);  -- Pass roll_no = 1 as a parameter
+    
+    -- Fetch and process the row
+    FETCH student_cursor INTO v_roll_no, v_name;
+    
+    IF student_cursor%FOUND THEN
+        -- Print the fetched data
+        DBMS_OUTPUT.PUT_LINE('Roll No: ' || v_roll_no || ' Name: ' || v_name);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Student not found with the given roll number.');
+    END IF;
+    
+    -- Close the cursor
+    CLOSE student_cursor;
+END;
+########################################################################
+Practical 8:
+For the given table write a PL SQL code to insert ten values into the table
+
+#Example:
+DECLARE
+    -- Declare variables to hold the roll number and name
+    v_roll_no INT;
+    v_name VARCHAR2(100);
+BEGIN
+    -- Loop to insert 10 rows
+    FOR i IN 1..10 LOOP
+        -- Assign roll_no and name values dynamically or statically
+        v_roll_no := i;  -- Here, we're setting roll_no from 1 to 10
+        v_name := 'Student ' || TO_CHAR(i);  -- Name as 'Student 1', 'Student 2', etc.
+        
+        -- Insert the values into the students table
+        INSERT INTO students (roll_no, name) 
+        VALUES (v_roll_no, v_name);
+        
+        -- Optional: Commit each insert if required (not necessary if auto-commit is enabled)
+        COMMIT;
+    END LOOP;
+    
+    -- Optionally, you can print a message after the insertions
+    DBMS_OUTPUT.PUT_LINE('10 rows have been inserted into the students table.');
+END;
+/
+##########################################################################
+Practical 9:
+For the given table write a PL SQL code to exception handling
+
+# Example:
+DECLARE
+    -- Declare variables to hold the roll number and name
+    v_roll_no INT;
+    v_sname VARCHAR2(25);
+    v_lname VARCHAR2(25);
+BEGIN
+    -- Loop to insert 10 rows
+    FOR i IN 1..10 LOOP
+        -- Assign roll_no, sname, and lname dynamically
+        v_roll_no := i;  -- roll_no from 1 to 10
+        v_sname := 'Student' || TO_CHAR(i);  -- sname as 'Student1', 'Student2', etc.
+        v_lname := 'LastName' || TO_CHAR(i);  -- lname as 'LastName1', 'LastName2', etc.
+        
+        -- Insert the values into the student table
+        BEGIN
+            INSERT INTO student (roll_no, sname, lname) 
+            VALUES (v_roll_no, v_sname, v_lname);
+            
+            -- Optional: Commit each insert if required (not necessary if auto-commit is enabled)
+            COMMIT;
+        EXCEPTION
+            WHEN DUP_VAL_ON_INDEX THEN
+                -- Handle duplicate value violation for unique constraints (primary key)
+                DBMS_OUTPUT.PUT_LINE('Error: Duplicate roll_no ' || v_roll_no || ' encountered. Skipping insert.');
+            WHEN OTHERS THEN
+                -- Handle any other unexpected errors
+                DBMS_OUTPUT.PUT_LINE('Error: An unexpected error occurred during the insert.');
+                -- Optionally, print the error message
+                DBMS_OUTPUT.PUT_LINE('Error Message: ' || SQLERRM);
+        END;
+    END LOOP;
+    
+    -- Optionally, print a message after the insertions
+    DBMS_OUTPUT.PUT_LINE('10 rows attempted to be inserted into the student table.');
+END;
+/
+##########################################################################
