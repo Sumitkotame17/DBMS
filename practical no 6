@@ -1,0 +1,37 @@
+-- Create Database and Tables
+create database t2;
+use t2;
+
+create table student(
+    rn int not null primary key,
+    name varchar(22) not null
+);
+
+create table student_bk(
+    rn int not null primary key,
+    name varchar(22) not null
+);
+
+-- Insert Records into student
+insert into student values (1, 'avishkar');
+insert into student values (2, 'ram');
+insert into student values (3, 'mustafa');
+insert into student values (4, 'sahil');
+
+-- Create Before Delete Trigger
+delimiter $$
+create trigger del
+before delete on student
+for each row
+begin
+    insert into student_bk values(old.rn, old.name);
+end; 
+$$
+delimiter ;
+
+-- Delete Record and Test Trigger
+delete from student where rn=1;
+
+-- Verify Results
+select * from student;
+select * from student_bk;
