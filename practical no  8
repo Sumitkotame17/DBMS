@@ -1,0 +1,19 @@
+CREATE TABLE employee1 (
+    employee_id NUMBER(10),
+    employee_name VARCHAR2(50)
+);
+
+DECLARE
+    v_emp_id NUMBER(10);
+     v_emp_name VARCHAR2(50);
+BEGIN
+      v_emp_id := 1;
+    FOR i IN 1..10 LOOP
+           v_emp_name := 'Employee_' || i;
+         INSERT INTO employee1(employee_id, employee_name)
+        VALUES (v_emp_id, v_emp_name);
+         v_emp_id := v_emp_id + 1;
+    END LOOP;
+      COMMIT;
+     DBMS_OUTPUT.PUT_LINE('10 rows have been inserted successfully.');
+END;
