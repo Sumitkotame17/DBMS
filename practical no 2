@@ -1,0 +1,27 @@
+ create database expt2;
+ 
+ CREATE TABLE expt2.MyTable (
+    id INT PRIMARY KEY,
+    Name VARCHAR(50),
+    age INT,
+    city VARCHAR(50)
+);
+
+INSERT INTO expt2.MyTable (id, name, age, city) 
+VALUES (1, 'sumit kotame', 25, 'Apke_dil_mein'), 
+	(2, 'virat kohli', 30, 'london'),
+    (3, 'narendra modi', 35, 'delhi'),
+    (4, 'pratik kanawade', 28, 'hod cabin');
+
+UPDATE expt2.MyTable
+SET city = 'ghar pe'
+WHERE id = 4;
+
+DELETE FROM MyTable
+WHERE id = 4;
+
+ALTER TABLE MyTable
+ADD COLUMN email VARCHAR(100);
+
+ALTER TABLE MyTable
+DROP COLUMN email;
