@@ -1,0 +1,40 @@
+  create database coder;
+  CREATE TABLE coder.smile (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Department VARCHAR(50),
+    Salary DECIMAL(10, 2)
+);
+
+
+INSERT INTO coder.smile (EmployeeID, FirstName, LastName, Department, Salary)
+VALUES
+(1, 'John', 'Doe', 'Engineering', 70000),
+(2, 'Jane', 'Smith', 'HR', 60000),
+(3, 'Sam', 'Brown', 'Engineering', 75000),
+(4, 'Lisa', 'White', 'Marketing', 65000),
+(5, 'Tom', 'Green', 'Engineering', 80000);
+
+select *  from coder.smile ;
+
+DELIMITER //
+
+CREATE FUNCTION coder.CalculateBonus(salary DECIMAL(10, 2))
+RETURNS DECIMAL(10, 2)
+DETERMINISTIC
+BEGIN
+    RETURN salary * 0.10;
+END //
+
+DELIMITER ;
+
+USE coder;
+SELECT 
+    EmployeeID, 
+    FirstName, 
+    LastName, 
+    Salary, 
+    CalculateBonus(Salary) AS Bonus 
+FROM 
+    smile;
